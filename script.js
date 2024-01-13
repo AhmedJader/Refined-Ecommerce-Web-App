@@ -1,7 +1,19 @@
+const loader = document.getElementById("loader");
+loader.classList.remove("loader");
+
+function onButtonClick() {
+    loader.classList.add("loader");
+    // Show the loader when the button is clicked
+    loader.classList.remove("loader--hidden");
+
+    // Call the getProduct function
+    getProduct();
+}
+
 function getProduct() {
     const productvalue = document.getElementById('product').value;
     const productURL = `https://fakestoreapi.com/products/${productvalue}`;
-    
+
     fetch(productURL)
         .then((res) => {
             if (!res.ok) {
@@ -9,12 +21,22 @@ function getProduct() {
             }
             return res.json();
         })
-        .then((json) => displayProduct(json))
+        .then((json) => {
+            displayProduct(json);
+        })
         .catch((error) => {
             console.error('Error fetching product:', error.message);
             displayProductError(error.message);
+        })
+        .finally(() => {
+            // Use setTimeout to delay hiding the loader for a specific duration
+            setTimeout(() => {
+                loader.classList.add("loader--hidden");
+            }, 1000); // Adjust the duration (in milliseconds) as needed
         });
-}//getProduct ends
+}
+
+
 
 function displayProduct(data) {
     const catDivInfo = document.getElementById('category-div');
